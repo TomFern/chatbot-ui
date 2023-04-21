@@ -1,0 +1,12 @@
+- `sem-version`: switch active language version. Takes two arguments: language, version. The available versions are https://docs.semaphoreci.com/ci-cd-environment/sem-version-managing-language-versions-on-linux/.
+- `cache`: store and retrieve temporary files and folders. Used for dependencies. The store command takes two arguments: key, path. The restore command takes one argument: key.
+- `articact`: store and retrieve files and folders. Used for compiled binaries.
+
+
+For the same reason, you must `artifact push workflow` any build binaries or artifacts in the first block and restore them with `artifact pull workflow`. The pull version does not support wildcards. The full reference for `artifact` is here https://docs.semaphoreci.com/reference/artifact-cli-reference/
+
+You must also use the `cache` command whenever there is a block where dependencies are downloaded, for example `npm install`.`cache` has two options:
+- `cache store`: takes two arguments: a comma-separated list of keys and a path. The files and directories in the path are stored under the key. You only run this once in the first job.
+- `cache restore`: takes one argument: a comma-separated list of keys. The first key found triggers the retrieval of the files stored under it. 
+
+The core concepts for pipelines are https://docs.semaphoreci.com/essentials/concepts/ and https://docs.semaphoreci.com/essentials/modeling-complex-workflows/
