@@ -2,30 +2,26 @@ version: v1.0
 name: Pipeline
 agent:
   machine:
-    os_image: ubuntu2004
     type: e1-standard-2
+    os_image: ubuntu2004
 blocks:
   - name: Build
     task:
       env_vars:
-        - name: NODE_ENV
-          value: production
+        - name: GOPATH
+          value: /home/semaphore/go
       jobs:
         - name: Build
           commands:
             - checkout
-            - cache restore node-modules-$(md5sum package-lock.json | cut -d' ' -f1) || true
-            - npm install
-            - npm run build
-            - cache store node-modules-$(md5sum package-lock.json | cut -d' ' -f1) ./node_modules
+            - cache restore go-cache-$(checksum "go.mod")
+            - go build -v
+            - cache store go-cache-$(checksum "go.mod")
   - name: Test
     task:
-      env_vars:
-        - name: NODE_ENV
-          value: test
       jobs:
         - name: Test
           commands:
             - checkout
-            - cache restore node-modules-$(md5sum package-lock.json | cut -d' ' -f1)
-            - npm run test
+            - cache restore go-cache-$(checksum "go.mod")
+            - go test -v ./...
