@@ -14,10 +14,10 @@ blocks:
         - name: Build
           commands:
             - checkout
-            - 'cache restore node-modules-${{ checksum "package-lock.json" }} || true'
+            - 'cache restore node-modules-${checksum "package-lock.json"} || true'
             - npm install
             - npm run build
-            - 'cache store node-modules-${{ checksum "package-lock.json" }} ./node_modules'
+            - 'cache store node-modules-${checksum "package-lock.json"} ./node_modules'
   - name: Test
     task:
       env_vars:
@@ -27,5 +27,5 @@ blocks:
         - name: Test
           commands:
             - checkout
-            - 'cache restore node-modules-${{ checksum "package-lock.json" }}'
+            - 'cache restore node-modules-${checksum "package-lock.json"}'
             - npm run test
