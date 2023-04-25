@@ -1,0 +1,31 @@
+version: v1.0
+name: Pipeline
+agent:
+  machine:
+    os_image: ubuntu2004
+    type: e1-standard-2
+blocks:
+  - name: Build
+    task:
+      env_vars:
+        - name: NODE_ENV
+          value: production
+      jobs:
+        - name: Build
+          commands:
+            - checkout
+            - 'cache restore node-modules-${{ checksum "package-lock.json" }} || true'
+            - npm install
+            - npm run build
+            - 'cache store node-modules-${{ checksum "package-lock.json" }} ./node_modules'
+  - name: Test
+    task:
+      env_vars:
+        - name: NODE_ENV
+          value: test
+      jobs:
+        - name: Test
+          commands:
+            - checkout
+            - 'cache restore node-modules-${{ checksum "package-lock.json" }}'
+            - npm run test
