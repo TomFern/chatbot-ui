@@ -2,5 +2,6 @@
 # Generate default prompt - source this file before running the app
 
 prompt_file=prompts/v1-gpt3
-echo "Generating AGENT_PROMPT"
-export AGENT_PROMPT="$(awk 'BEGIN{}{out=out$0"\n"}END{print out}' $prompt_file| sed 's/\n$//')"
+echo "Generating SemaphoreGPT prompt: $prompt_file"
+export NEXT_PUBLIC_DEFAULT_SYSTEM_PROMPT="$(awk 'BEGIN{}{out=out$0"\n"}END{print out}' $prompt_file| sed 's/\n$//')"
+
